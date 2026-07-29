@@ -1,0 +1,25 @@
+---
+- name: Install necessary packages
+  hosts: all
+  become: true
+  tasks:
+  - name: Install packages
+    ansible.builtin.apt:
+      name:
+        - tclsh
+        - pkg-config
+        - libssl-dev
+        - build-essential
+        - make
+        - cmake 
+        - tcl
+        - openssl
+        - zlib1g-dev
+        - gcc 
+        - perl 
+        - net-tools
+        - git
+        - zip
+        - unzip
+      state: present
+      update_cache: yes
