@@ -22,7 +22,7 @@
 
     - name: Edit sls file
       ansible.builtin.lineinfile:
-        path: /root/srt-live-server/slscore
+        path: /root/srt-live-server/slscore/common.cpp
         insertAfter: '^#include <vector>'
         line: '#include <time.h>'
 
