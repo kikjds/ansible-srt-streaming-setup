@@ -1,0 +1,35 @@
+- name: clone and build repos
+  hosts: all
+  become: true
+  tasks:
+    - name: Clone repo srt-live-server
+      ansible.builtin.git:
+        repo: https://gitlab.com/mattwb65/srt-live-server.git
+        dest: /root/srt-live-server
+
+    - name: Clone repo srt
+      ansible.builtin.git:
+        repo: https://github.com/Haivision/srt.git
+        dest: /root/srt
+
+    - name: Build SRT
+      ansible.builtin.shell:
+        cmd: |
+          ./configure && make -j8 && make install
+          touch /root/srt_built.marker
+        chdir: /root/srt
+        creates: /root/srt_built.marker
+
+    - name: Edit sls file
+      ansible.builtin.lineinfile:
+        path: /root/srt-live-server/slscore
+        insertAfter: '^#include <vector>'
+        line: '#include <time.h>'
+
+    - name: Build srt-live-server
+      ansible.builtin.shell:
+        cmd: |
+          make -j8
+          touch /root/sls_built.marker
+        chdir: /root/srt-live-server
+        creates: /root/sls_built.marker
