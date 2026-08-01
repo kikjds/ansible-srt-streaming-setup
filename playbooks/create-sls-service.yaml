@@ -1,0 +1,30 @@
+---
+- name: Create systemd service
+  hosts: debian
+  become: true
+  tasks:
+  - name: Crteate bash starting script
+    ansible.builtin.copy:
+      dest: /root/sls.sh
+      content: |
+        #!/bin/bash
+        cd /root/srt-live-server/bin/
+        ./sls -c ../sls.conf
+      mode: '0755'
+      
+  - name: Create systemd file
+    ansible.builtin.copy:
+      dest: /etc/systemd/system/sls.service
+      content: |
+        [Unit]
+        Description=srt server
+        After=network.target
+
+        [Service]
+        ExecStart=/root/sls.sh
+        Restart=always
+        RestartSec=5s
+
+        [Install]
+        WantedBy=multi-user.target
+      mode: '0640'
