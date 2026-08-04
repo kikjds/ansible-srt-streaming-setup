@@ -6,27 +6,6 @@
   - name: Edit main config files
     ansible.builtin.copy:
       dest: /root/srt-live-server/sls.conf
-      content: | 
-        srt {
-        worker_threads 1;
-        worker_connections 200;
-        http_port 8181;
-        cors_header *;
-        log_file /dev/stdout;
-    
-        server {
-            listen 8282;
-            latency 2000;
-            domain_player play;
-            domain_publisher live;
-            default_sid play/stream/PUT YOUR KEY-GIVE A NAME HERE;
-            backlog 10;
-            idle_streams_timeout 5;
-    
-            app {
-                app_publisher stream;
-                app_player stream;
-            }
-        }
-        }
+      content: '{{ sls_conf }}'
       backup: yes
+      force: no
