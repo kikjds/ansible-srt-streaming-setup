@@ -4,13 +4,15 @@
   tasks:
     - name: Clone repo srt-live-server
       ansible.builtin.git:
-        repo: https://gitlab.com/mattwb65/srt-live-server.git
+        repo: "{{ sls_repo }}"
         dest: /root/srt-live-server
+        update: no
 
     - name: Clone repo srt
       ansible.builtin.git:
-        repo: https://github.com/Haivision/srt.git
+        repo: "{{ srt_repo }}"
         dest: /root/srt
+        update: no
 
     - name: Build SRT
       ansible.builtin.shell:
@@ -23,7 +25,7 @@
     - name: Edit sls file
       ansible.builtin.lineinfile:
         path: /root/srt-live-server/slscore/common.cpp
-        insertAfter: '^#include <vector>'
+        insertafter : '^#include <vector>'
         line: '#include <time.h>'
 
     - name: Build srt-live-server
@@ -33,3 +35,8 @@
           touch /root/sls_built.marker
         chdir: /root/srt-live-server
         creates: /root/sls_built.marker
+
+    - name: Run ldconfig for SRT Live Server libraries
+      ansible.builtin.shell:
+        cmd: ldconfig
+        chdir: /root/srt-live-server/bin/
