@@ -1,0 +1,12 @@
+---
+- name: Starting project
+  ansible.builtin.import_playbook: install-packages.yaml
+
+- name: Starting project
+  ansible.builtin.import_playbook: clone-build-repositories.yaml
+
+- name: Starting project
+  ansible.builtin.import_playbook: setup-config-files.yaml
+
+- name: Starting project
+  ansible.builtin.import_playbook: create-sls-service.yaml
