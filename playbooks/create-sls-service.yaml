@@ -3,35 +3,35 @@
   hosts: all
   become: true
   tasks:
-  - name: Crteate bash starting script
-    ansible.builtin.copy:
-      dest: /root/sls.sh
-      content: |
-        #!/bin/bash
-        cd /root/srt-live-server/bin/
-        ./sls -c ../sls.conf
-      mode: '0755'
-      
-  - name: Create systemd file
-    ansible.builtin.copy:
-      dest: /etc/systemd/system/sls.service
-      content: |
-        [Unit]
-        Description=srt server
-        After=network.target
+    - name: Create bash start script
+      ansible.builtin.copy:
+        dest: /root/sls.sh
+        content: |
+          #!/bin/bash
+          cd /root/srt-live-server/bin/
+          ./sls -c ../sls.conf
+        mode: '0755'
 
-        [Service]
-        ExecStart=/root/sls.sh
-        Restart=always
-        RestartSec=5s
+    - name: Create systemd file
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/sls.service
+        content: |
+          [Unit]
+          Description=srt server
+          After=network.target
 
-        [Install]
-        WantedBy=multi-user.target
-      mode: '0640'
+          [Service]
+          ExecStart=/root/sls.sh
+          Restart=always
+          RestartSec=5s
 
-  - name: Start service
-    ansible.builtin.systemd_service:
-      name: sls.service
-      state: started
-      daemon_reload: true
-      enabled: true
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0640'
+
+    - name: Start service
+      ansible.builtin.systemd_service:
+        name: sls.service
+        state: started
+        daemon_reload: true
+        enabled: true

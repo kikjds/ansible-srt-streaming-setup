@@ -1,4 +1,4 @@
-- name: clone and build repos
+- name: Clone and build repositories
   hosts: all
   become: true
   tasks:
@@ -6,13 +6,15 @@
       ansible.builtin.git:
         repo: "{{ sls_repo }}"
         dest: /root/srt-live-server
-        update: no
+        version: 0fd87d0694c468bef4c1f2f0c9fe7c07ee27ec00
+        update: false
 
     - name: Clone repo srt
       ansible.builtin.git:
         repo: "{{ srt_repo }}"
         dest: /root/srt
-        update: no
+        version: 899348d8318eb9a3c5a5b6ec43c4a1114288773a
+        update: false
 
     - name: Build SRT
       ansible.builtin.shell:
@@ -25,7 +27,7 @@
     - name: Edit sls file
       ansible.builtin.lineinfile:
         path: /root/srt-live-server/slscore/common.cpp
-        insertafter : '^#include <vector>'
+        insertafter: '^#include <vector>'
         line: '#include <time.h>'
 
     - name: Build srt-live-server
@@ -37,6 +39,5 @@
         creates: /root/sls_built.marker
 
     - name: Run ldconfig for SRT Live Server libraries
-      ansible.builtin.shell:
-        cmd: ldconfig
-        chdir: /root/srt-live-server/bin/
+      ansible.builtin.command: ldconfig
+      changed_when: false

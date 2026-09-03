@@ -3,9 +3,10 @@
   hosts: all
   become: true
   tasks:
-  - name: Edit main config files
-    ansible.builtin.copy:
-      dest: /root/srt-live-server/sls.conf
-      content: '{{ sls_conf }}'
-      backup: yes
-      force: no
+    - name: Edit main config files
+      ansible.builtin.copy:
+        dest: /root/srt-live-server/sls.conf
+        content: '{{ sls_conf }}'
+        backup: true
+        force: true
+        mode: '0644'
